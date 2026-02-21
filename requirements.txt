@@ -1,0 +1,14 @@
+# ══════════════════════════════════════════════════════════════
+#  requirements.txt  –  Python dependencies for Shoulder Companion
+#
+#  Install with:
+#      pip install -r requirements.txt
+#
+#  NOTE: picamera2 must be installed via apt, not pip:
+#      sudo apt install -y python3-picamera2
+# ══════════════════════════════════════════════════════════════
+
+opencv-python
+mediapipe
+RPi.GPIO
+numpy
