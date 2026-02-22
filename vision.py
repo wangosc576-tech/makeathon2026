@@ -9,6 +9,8 @@ import numpy as np
 from picamera2 import Picamera2
 from camera import Camera
 import time
+import subprocess
+import io
 
 # ── MediaPipe setup ───────────────────────────────────────────
 _mp_hands = mp.solutions.hands
@@ -62,7 +64,7 @@ def get_gesture(cam):
     finger count, or None if no hand is found.
     Also handles the preview window if not in headless mode.
     """
-    frame = cam.capture_array()
+    frame = subprocess.run(["python3", "camera.py"], capture_output=True)
     # frame = cv2.flip(frame, 1) # Don't think this is necessary
     result = _hands.process(frame)  # expects RGB
 

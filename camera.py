@@ -1,6 +1,8 @@
 from picamera2 import Picamera2
 from config import CAMERA_WIDTH, CAMERA_HEIGHT, JPG_QUALITY
 import time
+import numpy as np
+import sys
 
 
 class Camera:
@@ -32,8 +34,7 @@ class Camera:
 
 
 if __name__ == "__main__":
-    print("start camera")
     cam = Camera()
-    cam.capture_picture()
+    frame = cam.capture_frame()
+    np.save(sys.stdout.buffer, frame)
     cam.stop()
-    print("done")
