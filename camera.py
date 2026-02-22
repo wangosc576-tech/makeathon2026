@@ -32,9 +32,10 @@ class Camera:
     def stop(self):
         self.cam.stop()
 
-
 if __name__ == "__main__":
     cam = Camera()
     frame = cam.capture_frame()
-    np.save(sys.stdout.buffer, frame)
+    # write shape info then raw bytes
+    sys.stdout.buffer.write(np.array(frame.shape, dtype=np.int32).tobytes())
+    sys.stdout.buffer.write(frame.tobytes())
     cam.stop()

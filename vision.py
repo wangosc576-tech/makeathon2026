@@ -9,7 +9,7 @@ import numpy as np
 import time
 import subprocess
 import io
-
+import os
 # ── MediaPipe setup ───────────────────────────────────────────
 _mp_hands = mp.solutions.hands
 _mp_draw = mp.solutions.drawing_utils
@@ -55,15 +55,24 @@ def count_fingers(hand_landmarks):
             count += 1
     return count
 
-
 def capture_frame():
-    """Call camera.py with system python3 and return numpy array."""
-    result = subprocess.run(["python3", "camera.py"], capture_output=True)
+    clean_env = {k: v for k, v in os.environ.items()
+                 if k not in ("PYTHONPATH", "VIRTUAL_ENV", "PATH")}
+    clean_env["PATH"] = "/usr/bin:/bin"
+
+    result = subprocess.run(
+        ["python3", "camera.py"],
+        capture_output=True,
+        env=clean_env
+    )
     if result.returncode != 0:
         print("Camera error:", result.stderr.decode())
         return None
-    return np.load(io.BytesIO(result.stdout))
 
+    # first 12 bytes = 3 int32s = shape (height, width, channels)
+    shape = np.frombuffer(result.stdout[:12], dtype=np.int32)
+    frame = np.frombuffer(result.stdout[12:], dtype=np.uint8).reshape(shape)
+    return frame
 
 def get_gesture():
     """
