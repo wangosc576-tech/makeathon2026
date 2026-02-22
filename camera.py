@@ -25,6 +25,15 @@ class Camera:
     def capture_picture(self):
         image_name = f"image_{self.counter}.jpg"
         self.cam.capture_file(image_name)
+        self.counter += 1
 
     def stop(self):
         self.cam.stop()
+
+
+if __name__ == "__main__":
+    print("start camera")
+    cam = Camera()
+    cam.capture_picture()
+    cam.stop()
+    print("done")
