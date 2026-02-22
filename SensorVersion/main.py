@@ -5,30 +5,35 @@
 
 import time
 import gpio_manager   # must be imported first – sets up GPIO.setmode once
-import flashlight
+import led 
 import ir_sensor
 import touch_sensor
-import camera
-import buzzer
-
+import oled
+from camera_workaround import capture_picture
 def main():
+
     print("=== Shoulder Companion – Sensor Mode ===")
     print("  IR sensor   → wave to toggle flashlight on/off")
     print("  Touch       → single tap  = take a photo")
     print("  Touch       → double tap  = buzzer beep")
     print("Ctrl+C to stop.\n")
-
-    camera.init()
-
+    counter = 0
+    oled.init()
+    led_on = False
     try:
         while True:
             # IR sensor: new detection toggles the flashlight
-            ir_sensor.check_toggle(flashlight.toggle)
-
+            if (ir_sensor.detected()):
+                print("toggling led")
+                if (led_on):
+                    led.on()
+                else:
+                    led.off()
+                led_on = not led_on
             # Touch sensor: single = photo, double = buzzer
             touch_sensor.check(
-                on_single_tap = camera.take_photo,
-                on_double_tap = buzzer.double_beep,
+                on_single_tap = capture_picture,
+                on_double_tap = oled.switch_state
             )
 
             time.sleep(0.01)
@@ -37,11 +42,10 @@ def main():
         print("\nStopped.")
     finally:
         # Each module cleans up its own hardware
-        flashlight.cleanup()
-        buzzer.cleanup()
-        camera.cleanup()
+        led.off()
         # ONE call releases all GPIO pins
         gpio_manager.cleanup()
+        oled.clear()
         print("Cleaned up. Goodbye!")
 
 if __name__ == "__main__":
