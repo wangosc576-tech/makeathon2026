@@ -4,12 +4,14 @@
 # ══════════════════════════════════════════════════════════════
 
 import time
-import flashlight
 import ir_sensor
 import vision
 from debouncer import GestureDebouncer
 from gesture_map import GESTURE_MAP
 from config import IR_COOLDOWN
+from camera import Camera
+import RPi.GPIO as GPIO
+
 
 def main():
     print("=== Shoulder Companion ===")
@@ -18,18 +20,17 @@ def main():
         print(f"  {fingers} finger(s) → {fn.__name__}")
     print("Waiting for IR trigger...\n")
 
-    cam            = vision.init_camera()
-    debouncer      = GestureDebouncer()
-    last_ir_time   = 0
+    cam = Camera()
+    debouncer = GestureDebouncer()
+    last_ir_time = 0
     gesture_active = False
-    active_label   = "None"
+    active_label = "None"
 
     try:
         while True:
-
             # ── IR wake check ──────────────────────────────────
             if ir_sensor.detected():
-                last_ir_time   = time.time()
+                last_ir_time = time.time()
                 gesture_active = True
             elif gesture_active:
                 if time.time() - last_ir_time > IR_COOLDOWN:
@@ -48,20 +49,18 @@ def main():
             if finger_count is not None:
                 confirmed = debouncer.update(finger_count)
                 if confirmed is not None and confirmed in GESTURE_MAP:
-                    GESTURE_MAP[confirmed]()
-                    active_label = GESTURE_MAP[confirmed].__name__
-                    print(f"[GESTURE] {confirmed} finger(s) → {active_label}")
+                    # GESTURE_MAP[confirmed]() $ (Uncomment when fixed)
+                    print(f"[GESTURE] {confirmed} finger(s)")
             else:
                 debouncer.clear()
 
     except KeyboardInterrupt:
         print("\nStopped.")
     finally:
-        flashlight.cleanup()
-        ir_sensor.cleanup()
-        vision.cleanup()
+        GPIO.cleanup()
         cam.stop()
         print("Cleaned up. Goodbye!")
+
 
 if __name__ == "__main__":
     main()

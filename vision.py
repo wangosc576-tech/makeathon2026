@@ -3,7 +3,7 @@
 #  To test standalone: python vision.py
 # ══════════════════════════════════════════════════════════════
 
-import cv2
+# import cv2 # (i don't think we need this)
 import mediapipe as mp
 import numpy as np
 from picamera2 import Picamera2
@@ -63,7 +63,7 @@ def get_gesture(cam):
     Also handles the preview window if not in headless mode.
     """
     frame = cam.capture_array()
-    frame = cv2.flip(frame, 1)
+    # frame = cv2.flip(frame, 1) # Don't think this is necessary
     result = _hands.process(frame)  # expects RGB
 
     finger_count = None

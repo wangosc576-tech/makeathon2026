@@ -1,6 +1,6 @@
 Features 
-- turn everything off 
 - turn the light on 
+- turn everything off 
 - make it blinking 
 - play a sound
 - take a picture
