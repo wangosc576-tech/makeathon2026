@@ -8,7 +8,7 @@
 #      sudo apt install -y python3-picamera2
 # ══════════════════════════════════════════════════════════════
 
-opencv-python
+# opencv-python
 mediapipe
 RPi.GPIO
 numpy
