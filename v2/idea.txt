@@ -1,9 +1,0 @@
-Sensors 
-- one touch, one ir
-Peripherals
-- a small oled Screen
-- a led 
-Features
-- the ability to change the type of images being displayed (betweens quotes and images)
-- turn the light on and off 
-  
