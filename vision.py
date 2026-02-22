@@ -56,13 +56,22 @@ def count_fingers(hand_landmarks):
     return count
 
 
-def get_gesture(cam):
+def capture_frame():
+    """Call camera.py with system python3 and return numpy array."""
+    result = subprocess.run(["python3", "camera.py"], capture_output=True)
+    if result.returncode != 0:
+        print("Camera error:", result.stderr.decode())
+        return None
+    return np.load(io.BytesIO(result.stdout))
+
+
+def get_gesture():
     """
     Capture one frame from the camera and return the detected
     finger count, or None if no hand is found.
     Also handles the preview window if not in headless mode.
     """
-    frame = subprocess.run(["python3", "camera.py"], capture_output=True)
+    frame = capture_frame()
     print("loaded frame")
     # frame = cv2.flip(frame, 1) # Don't think this is necessary
     print("begin processing")
@@ -81,7 +90,7 @@ if __name__ == "__main__":
     print("Vision test – hold up fingers. Ctrl+C to stop.")
     try:
         while True:
-            count = get_gesture(None)
+            count = get_gesture()
             if count is not None:
                 print(f"Fingers detected: {count}")
     except KeyboardInterrupt:
