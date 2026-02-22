@@ -1,0 +1,6 @@
+Features 
+- turn everything off 
+- turn the light on 
+- make it blinking 
+- play a sound
+- take a picture
