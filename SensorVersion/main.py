@@ -11,7 +11,6 @@ import touch_sensor
 import oled
 from camera_workaround import capture_picture
 def main():
-
     print("=== Shoulder Companion – Sensor Mode ===")
     print("  IR sensor   → wave to toggle flashlight on/off")
     print("  Touch       → single tap  = take a photo")
@@ -20,21 +19,26 @@ def main():
     counter = 0
     oled.init()
     led_on = False
+    last_toggle = 0
     try:
         while True:
-            # IR sensor: new detection toggles the flashlight
+            
             if (ir_sensor.detected()):
-                print("toggling led")
-                if (led_on):
-                    led.on()
-                else:
-                    led.off()
-                led_on = not led_on
+            # IR sensor: new detection toggles the flashlight
+                now = time.time()
+                if now - last_toggle > 0.5:
+                    if (led_on):
+                        led.off()
+                    else:
+                        led.on()
+                    led_on = not led_on
+                    last_toggle = time.time()
             # Touch sensor: single = photo, double = buzzer
             touch_sensor.check(
                 on_single_tap = capture_picture,
                 on_double_tap = oled.switch_state
             )
+            oled.loop()
 
             time.sleep(0.01)
 
