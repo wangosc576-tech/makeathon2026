@@ -6,8 +6,6 @@
 # import cv2 # (i don't think we need this)
 import mediapipe as mp
 import numpy as np
-from picamera2 import Picamera2
-from camera import Camera
 import time
 import subprocess
 import io
@@ -79,10 +77,9 @@ def get_gesture(cam):
 # ── Standalone test ───────────────────────────────────────────
 if __name__ == "__main__":
     print("Vision test – hold up fingers. Ctrl+C to stop.")
-    cam = Camera()
     try:
         while True:
-            count = get_gesture(cam)
+            count = get_gesture(None)
             if count is not None:
                 print(f"Fingers detected: {count}")
     except KeyboardInterrupt:
