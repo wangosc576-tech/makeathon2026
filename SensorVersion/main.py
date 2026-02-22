@@ -9,7 +9,8 @@ import led
 import ir_sensor
 import touch_sensor
 import oled
-from camera_workaround import capture_picture
+import camera_workaround
+import bash_workaround
 def main():
     print("=== Shoulder Companion – Sensor Mode ===")
     oled.init()
@@ -32,7 +33,7 @@ def main():
             # Touch sensor: single = photo, double = buzzer
             touch_sensor.check(
                 on_single_tap = oled.switch_state,
-                on_double_tap = capture_picture
+                on_double_tap = bash_workaround.capture_picture()
             )
             if (time.time() - last_oled) > 1.5:
                 oled.loop()

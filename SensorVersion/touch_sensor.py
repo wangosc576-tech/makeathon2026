@@ -45,7 +45,8 @@ def check(on_single_tap, on_double_tap):
         if _pending_single and (now - _last_tap_time) < DOUBLE_TAP_WINDOW:
             # Second tap within window → double tap
             print("[TOUCH] Double tap!")
-            on_double_tap()
+            if (on_double_tap is not None):
+                on_double_tap()
             _pending_single = False
             _last_tap_time  = 0.0
         else:

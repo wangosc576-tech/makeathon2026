@@ -1,0 +1,1 @@
+@reboot /home/makeathon/real/makeathon2026/SensorVersion/.real_venv/bin/python /home/makeathon/real/makeathon2026/SensorVersion/main.py >>  /home/makeathon/real/makeathon2026/SensorVersion/main.log 2>&1 
