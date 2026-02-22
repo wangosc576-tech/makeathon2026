@@ -11,6 +11,7 @@ from gesture_map import GESTURE_MAP
 from config import IR_COOLDOWN
 from camera import Camera
 import RPi.GPIO as GPIO
+import led
 
 
 def main():
@@ -50,6 +51,14 @@ def main():
                 confirmed = debouncer.update(finger_count)
                 if confirmed is not None and confirmed in GESTURE_MAP:
                     # GESTURE_MAP[confirmed]() $ (Uncomment when fixed)
+                    if confirmed == 0:
+                        led.on()
+                    if confirmed == 1:
+                        led.off()
+                    if confirmed == 2:
+                        led.orange()
+                        cam.capture_picture()
+                        led.off()
                     print(f"[GESTURE] {confirmed} finger(s)")
             else:
                 debouncer.clear()

@@ -1,0 +1,11 @@
+# ══════════════════════════════════════════════════════════════
+#  requirements.txt
+#
+#  Install with:
+#      pip install -r requirements.txt
+#
+#  picamera2 must be installed via apt, not pip:
+#      sudo apt install -y python3-picamera2
+# ══════════════════════════════════════════════════════════════
+
+RPi.GPIO
