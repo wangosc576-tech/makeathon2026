@@ -1,55 +1,52 @@
-# ══════════════════════════════════════════════════════════════
-#  camera.py  –  takes and saves photos using the Pi Camera
-#  To test standalone: python camera.py
-# ══════════════════════════════════════════════════════════════
-
 from picamera2 import Picamera2
+from config import CAMERA_WIDTH, CAMERA_HEIGHT, JPG_QUALITY
 from datetime import datetime
-import os
 import time
-from config import PHOTO_SAVE_DIR
+import numpy as np
+import sys
 
-_cam = None
 
-def init():
-    """
-    Initialise the Pi Camera. Call once at startup.
-    Also creates the photo save directory if it doesn't exist.
-    """
-    global _cam
-    os.makedirs(PHOTO_SAVE_DIR, exist_ok=True)  # only runs when explicitly initialised
-    _cam = Picamera2()
-    _cam.configure(_cam.create_still_configuration())
-    _cam.start()
-    time.sleep(0.5)  # let sensor stabilise
-    print(f"[CAMERA] Ready. Saving photos to: {PHOTO_SAVE_DIR}")
+class Camera:
+    def start(self):
+        cam = Picamera2()
+        config = cam.create_preview_configuration(
+            main={"format": "RGB888", "size": (CAMERA_WIDTH, CAMERA_HEIGHT)}
+        )
+        cam.options["quality"] = JPG_QUALITY
+        cam.configure(config)
+        cam.start()
+        time.sleep(0.5)  # let sensor stabilize
+        return cam
 
-def take_photo():
-    """
-    Capture a photo and save it with a timestamp filename.
-    Returns the file path, or None if the camera isn't initialised.
-    """
-    if _cam is None:
-        print("[CAMERA] Not initialised – call camera.init() first.")
-        return None
+    def __init__(self):
+        self.cam = self.start()
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filepath  = os.path.join(PHOTO_SAVE_DIR, f"photo_{timestamp}.jpg")
-    _cam.capture_file(filepath)
-    print(f"[CAMERA] Photo saved → {filepath}")
-    return filepath
+    def capture_frame(self):
+        return self.cam.capture_array()
 
-def cleanup():
-    global _cam
-    if _cam is not None:
-        _cam.stop()
-        _cam = None
+    def capture_picture(self, path=None):
+        if path is None:
+            path = datetime.now().strftime("photo_%Y%m%d_%H%M%S.jpg")
+        self.cam.capture_file(path)
+        return path
 
-# ── Standalone test ───────────────────────────────────────────
+    def stop(self):
+        self.cam.stop()
+
+
 if __name__ == "__main__":
-    init()
-    print("Taking a test photo in 3 seconds...")
-    time.sleep(3)
-    path = take_photo()
-    print(f"Saved to: {path}")
-    cleanup()
+    cam = Camera()
+
+    if "--save" in sys.argv:
+        idx = sys.argv.index("--save")
+        # use provided path or generate timestamped name
+        path = sys.argv[idx + 1] if idx + 1 < len(sys.argv) else None
+        saved = cam.capture_picture(path)
+        print(f"Saved: {saved}", file=sys.stderr)
+    else:
+        # default: output raw frame bytes to stdout
+        frame = cam.capture_frame()
+        sys.stdout.buffer.write(np.array(frame.shape, dtype=np.int32).tobytes())
+        sys.stdout.buffer.write(frame.tobytes())
+
+    cam.stop()

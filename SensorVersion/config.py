@@ -4,9 +4,8 @@
 # ══════════════════════════════════════════════════════════════
 
 # GPIO pins
-FLASHLIGHT_PIN    = 18
-IR_SENSOR_PIN     = 24
-TOUCH_PIN         = 23
+IR_SENSOR_PIN     = 26
+TOUCH_PIN         = 12
 BUZZER_PIN        = 25
 
 PWM_FREQ          = 1000
@@ -22,3 +21,11 @@ PHOTO_SAVE_DIR    = "/home/pi/photos"
 
 # Buzzer beep duration in seconds
 BUZZER_DURATION   = 0.3
+
+LED_RED = 16
+LED_GREEN = 20
+LED_BLUE = 21
+
+CAMERA_WIDTH = 320
+CAMERA_HEIGHT = 240
+JPG_QUALITY = 50

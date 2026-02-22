@@ -4,8 +4,7 @@
 # ══════════════════════════════════════════════════════════════
 
 # GPIO pins
-FLASHLIGHT_PIN = 18
-IR_SENSOR_PIN = 24
+IR_SENSOR_PIN = 26
 PWM_FREQ = 1000
 
 
