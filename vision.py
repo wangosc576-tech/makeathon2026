@@ -63,9 +63,11 @@ def get_gesture(cam):
     Also handles the preview window if not in headless mode.
     """
     frame = subprocess.run(["python3", "camera.py"], capture_output=True)
+    print("loaded frame")
     # frame = cv2.flip(frame, 1) # Don't think this is necessary
+    print("begin processing")
     result = _hands.process(frame)  # expects RGB
-
+    print("processend frame")
     finger_count = None
 
     if result.multi_hand_landmarks:
@@ -84,5 +86,3 @@ if __name__ == "__main__":
                 print(f"Fingers detected: {count}")
     except KeyboardInterrupt:
         print("\nDone.")
-    finally:
-        cam.stop()
