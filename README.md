@@ -54,7 +54,7 @@ Then you can simply execute the program every time on boot through
 ```
 @reboot /PATH/TO/PYTHON/IN/VENV /PATH/TO/SensorVision/main.py >> /PATH/TO/SensorVision/main.log 2>&1
 ```
-Absolute path must be used since it is run through boot
+Absolute path must be used since it is run at root
 
 ### Some Notes 
 - The image capturing is inconsistent, we ran into a lot of dependency issues so we did a work around by executing a bash script
