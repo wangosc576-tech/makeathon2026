@@ -14,8 +14,8 @@ Some features include a flashlight that can be turned off with a hand gesture, a
 to be transparent about our process. 
 
 ### An Explanation of this Code 
-This repo is incredibly messy unfortunately. We originally intended to run camera vision and a lot of our initial code was built around this idea.
-Our real main code that is demoed is contained within the SensorVersion directory which was a fallback. 
+This repo is a little messy unfortunately. We originally intended to run camera vision and a lot of our initial code was built around this idea. Unfortunately, we quickly learned that the Pi Zero 2 W was not meant for that, and after ~5 hours debugging and trying various solutions for faster builds and cameras realized that it was best to stick with traditional sensors.
+Our  main code that is demoed at the makeathon is contained within the SensorVersion directory which was a fallback. 
 
 ### Run Instructions 
 1. Set up the Rasberry PI Zero W 2 with the peripherals. The ports are specified in the config file inside SensorVision. More detailed resources can be
@@ -57,5 +57,5 @@ Then you can simply execute the program every time on boot through
 Absolute path must be used since it is run at root
 
 ### Some Notes 
-- The image capturing is inconsistent, we ran into a lot of dependency issues so we did a work around by executing a bash script
-- The device can delay on image capturing
+- The image capturing is inconsistent, we ran into a lot of dependency issues so we did a work around by executing a bash script and doing a system execution. This is mainly because the camera worked best if installed as a global python package which was hard to reconcile with a virtual environment.
+- The device can delay on image capturing and it is something that we've tried to minimize by having image capturing run on a background thread btu there are still delays.
